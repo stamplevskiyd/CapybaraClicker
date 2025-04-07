@@ -23,9 +23,12 @@ logger = logging.getLogger("alembic.env")
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 
+sqlalchemy_uri = "sqlite:///example.db"
+
 config.set_main_option(
     "sqlalchemy.url",
-    current_app.config.get("SQLALCHEMY_DATABASE_URI").replace("%", "%%"),
+    # current_app.config.get("SQLALCHEMY_DATABASE_URI").replace("%", "%%"),
+    sqlalchemy_uri
 )
 target_metadata = current_app.extensions["migrate"].db.metadata
 

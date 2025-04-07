@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column
-from app import db
+from capybara_clicker.extensions import db
 
 
 class ClickCounter(db.Model):
