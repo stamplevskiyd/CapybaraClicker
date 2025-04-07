@@ -30,3 +30,9 @@ def index():
     return render_template(
         "index.html", username=username, clicks=counter.count, image_path="clicker_capys/capy_1.jpg", description="TODO"
     )
+
+
+@capy_bp.route("/", methods=["GET", "POST"])
+@login_required
+def reset():
+    """Reset progress to see more capys"""
