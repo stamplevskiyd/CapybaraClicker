@@ -26,8 +26,10 @@ def create_app() -> Flask:
     # Register blueprints
     from capybara_clicker.routes.capybaras import capy_bp
     from capybara_clicker.routes.users import login_bp
+    from capybara_clicker.routes.api import api
 
     app.register_blueprint(capy_bp)
     app.register_blueprint(login_bp)
+    app.register_blueprint(api)
 
     return app

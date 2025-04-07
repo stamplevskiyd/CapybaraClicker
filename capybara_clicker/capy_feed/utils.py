@@ -7,5 +7,7 @@ def get_capy(count: int) -> tuple[str, str]:
     idx: int = 0
     while capy_keys[idx] < count:
         idx += 1
+        if idx == len(capy_keys) - 1:
+            break
 
     return capybaras[capy_keys[idx]]

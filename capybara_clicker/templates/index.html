@@ -9,7 +9,6 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            /* Replace 'images/capybara_wallpaper.jpg' with your actual wallpaper path */
             background: url("{{ url_for('static', filename='images/capybara_wallpaper.jpg') }}")
                 no-repeat center center fixed;
             background-size: cover;
@@ -35,7 +34,7 @@
         /* Logout button styling */
         #logout-button {
             text-decoration: none;
-            color: #fff;           /* White text */
+            color: #fff; /* White text */
             background-color: #d9534f; /* a red tone for logout */
             padding: 6px 12px;
             border-radius: 4px;
@@ -138,20 +137,55 @@
             {{ description }}
         </div>
 
-        <!-- Button group holding the "Click" and "Reset" forms side by side -->
+        <!-- Button group holding the "Click" and "Reset" side by side -->
         <div class="button-group">
-            <!-- Button that submits a POST request to increment click count -->
-            <form id="click-form" method="POST" action="{{ url_for('capybaras.index') }}">
-                <button class="form-button" type="submit">Click Me!</button>
-            </form>
-
-            <!-- Reset button: uses a separate form that, on submit, confirms user action -->
-            <form id="reset-form" method="POST" action="{{ url_for('capybaras.reset') }}"
-                  onsubmit="return confirm('Are you sure you want to reset the data?');">
-                <button class="form-button" type="submit">Reset</button>
-            </form>
+            <button id="click-button" class="form-button" type="button">Click Me!</button>
+            <button id="reset-button" class="form-button" type="button">Reset</button>
         </div>
     </div>
+
+    <!-- Simple JavaScript to call the API endpoints and update DOM without reloading -->
+    <script>
+      const clickButton = document.getElementById('click-button');
+      const resetButton = document.getElementById('reset-button');
+
+      // When "Click Me!" is pressed
+      clickButton.addEventListener('click', function() {
+        fetch('/api/v1/click', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ /* Include any needed data here, e.g. user ID */ })
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Update the click counter
+          document.getElementById('click-counter').textContent = 'Clicks: ' + data.clicks;
+          // Update the capybara image if needed
+          document.getElementById('capy-img').src = 'static/' + data.image_path;
+        })
+        .catch(err => console.error('Error in /api/v1/click:', err));
+      });
+
+      // When "Reset" is pressed
+      resetButton.addEventListener('click', function() {
+        // Ask for confirmation
+        if (!confirm('Are you sure you want to reset the data?')) {
+            return;
+        }
+        fetch('/api/v1/reset', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Update the click counter and image
+          document.getElementById('click-counter').textContent = 'Clicks: ' + data.clicks;
+          document.getElementById('capy-img').src = 'static/' + data.image_path;
+        })
+        .catch(err => console.error('Error in /api/v1/reset:', err));
+      });
+    </script>
 
 </body>
 </html>
