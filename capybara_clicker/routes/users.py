@@ -1,25 +1,16 @@
 from flask import Blueprint, Response, request, redirect, url_for, render_template
-from flask_login import login_user
+from flask_login import login_user, login_required, logout_user
 
-from capybara_clicker.extensions import login_manager, db
+from capybara_clicker.extensions import db
 from capybara_clicker.models.clicker import ClickCounter
 from capybara_clicker.models.user import User
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
-login_bp = Blueprint("login", __name__, template_folder="templates")
-
-
-@login_manager.user_loader
-def load_user(user_id: str) -> User | None:
-    """Check if user exists"""
-    user: User | None = (
-        db.session.query(User).filter_by(User.username == user_id).one_or_none()
-    )
-    return user
+login_bp = Blueprint("users", __name__, template_folder="templates")
 
 
 @login_bp.route("/register", methods=["GET", "POST"])
-def register_user() -> Response | str:
+def create_user() -> Response | str:
     """Register user view"""
     if request.method == "POST":
         username: str = request.form.get("username", "")
@@ -34,7 +25,7 @@ def register_user() -> Response | str:
                     message="Invalid username or password",
                 )
             )
-        if db.session.query(User).filter_by(username=username).exists():
+        if db.session.query(User).filter_by(username=username).one_or_none():
             return redirect(
                 url_for("error_custom", status_code=400, message="User exists")
             )
@@ -45,11 +36,11 @@ def register_user() -> Response | str:
         db.session.commit()
 
         # Create counter
-        counter = ClickCounter(user=user)
+        counter = ClickCounter(user_id=user.id)
         db.session.add(counter)
         db.session.commit()
 
-        return redirect(url_for("login"))
+        return redirect(url_for("users.login"))
     return render_template("register.html")
 
 
@@ -66,11 +57,18 @@ def login():
                 url_for("error_custom", status_code=404, message="User not found")
             )
 
-        if generate_password_hash(password) == user.password:
+        if check_password_hash(user.password, password):
             login_user(user)
-        else:
-            return redirect(
-                url_for("error_custom", status_code=403, message="Invalid password")
-            )
+            return redirect(url_for("capybaras.index"))
+        return redirect(
+            url_for("error_custom", status_code=403, message="Invalid password")
+        )
+    else:
+        return render_template("login.html")
 
+
+@login_bp.route("/logout")
+@login_required
+def logout():
+    logout_user()
     return render_template("login.html")

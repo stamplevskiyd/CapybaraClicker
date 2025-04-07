@@ -2,6 +2,7 @@ from flask import render_template, request
 
 import logging
 
+
 from capybara_clicker import create_app
 
 logger = logging.getLogger(__name__)

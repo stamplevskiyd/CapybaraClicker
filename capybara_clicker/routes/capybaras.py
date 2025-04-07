@@ -6,7 +6,7 @@ from capybara_clicker.models.clicker import ClickCounter
 from capybara_clicker.models.user import User
 
 capy_bp = Blueprint(
-    "index", __name__, template_folder="templates", static_folder="static"
+    "capybaras", __name__, template_folder="templates", static_folder="static"
 )
 
 
@@ -18,7 +18,8 @@ def index():
     counter: ClickCounter = (
         db.session.query(ClickCounter)
         .join(User, ClickCounter.user_id == User.id)
-        .filter(ClickCounter.user.username == username)
+        .filter(User.username == username)
+        .first()
     )
     if request.method == "POST":
         counter.count += 1

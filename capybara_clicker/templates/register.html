@@ -13,7 +13,7 @@
         <div class="card shadow-sm">
           <div class="card-body">
             <h1 class="card-title text-center mb-4">Create an Account</h1>
-            <form method="POST" action="{{ url_for('register') }}">
+            <form method="POST" action="{{ url_for('users.create_user') }}">
               <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input
@@ -40,7 +40,7 @@
         </div>
         <!-- If you want a link to redirect to login or other pages, you can add it below -->
         <div class="text-center mt-3">
-          <a href="{{ url_for('login') }}">Already have an account? Log in</a>
+          <a href="{{ url_for('users.login') }}">Already have an account? Log in</a>
         </div>
       </div>
     </div>

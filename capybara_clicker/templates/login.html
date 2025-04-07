@@ -16,7 +16,7 @@
         <div class="card shadow-sm">
           <div class="card-body">
             <h1 class="card-title text-center mb-4">Login</h1>
-            <form method="POST" action="{{ url_for('login') }}">
+            <form method="POST" action="{{ url_for('users.login') }}">
               <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input
@@ -55,7 +55,7 @@
         </div>
         <!-- Add optional link to register if desired -->
         <div class="text-center mt-3">
-          <a href="{{ url_for('register') }}">Don’t have an account? Register here</a>
+          <a href="{{ url_for('users.create_user') }}">Don’t have an account? Register here</a>
         </div>
       </div>
     </div>
