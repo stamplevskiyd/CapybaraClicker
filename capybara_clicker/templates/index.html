@@ -1,66 +1,58 @@
 <!DOCTYPE html>
-<html ng-app="WordcountApp">
-  <head>
-    <title>Wordcount</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- styles -->
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-  </head>
-  <body ng-controller="WordcountController">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-5 col-sm-offset-1">
-          <h1>Wordcount 3000</h1>
-          <br>
-          <form role="form" ng-submit="getResults()">
-            <div class="form-group">
-              <input type="text" name="url" class="form-control" id="url-box" placeholder="Enter URL..." style="max-width: 300px;" ng-model="url" required>
-            </div>
-            {% raw %}
-              <button type="submit" class="btn btn-primary" ng-disabled="loading">{{ submitButtonText }}</button>
-            {% endraw %}
-          </form>
-          <div class="alert alert-danger" role="alert" ng-show='urlerror'>
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span class="sr-only">Error:</span>
-            <span>There was an error submitting your URL.<br>
-            Please check to make sure it is valid before trying again.</span>
-          </div>
+<html>
+<head>
+    <title>Capybara Clicker</title>
+    <style>
+        /* Simple styling to position username on top-right corner */
+        #username {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* Center the main content */
+        #main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 100px;
+        }
+
+        #capy-img {
+            max-width: 300px;
+            height: auto;
+        }
+
+        #click-counter {
+            margin-top: 10px;
+            font-size: 2em;
+        }
+
+        #click-form {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Username in top-right corner -->
+    <div id="username">{{ username }}</div>
+
+    <!-- Main container -->
+    <div id="main-content">
+        <!-- Display the current capybara image -->
+        <img id="capy-img" src="{{ url_for('static', filename=image_path) }}" alt="Capybara">
+
+        <!-- Show current click count -->
+        <div id="click-counter">
+            Clicks: {{ clicks }}
         </div>
-        <div class="col-sm-5 col-sm-offset-1">
-          <h2>Frequencies</h2>
-          <br>
-          <div id="results">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Word</th>
-                  <th>Count</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr ng-repeat="element in wordcounts">
-                  {% raw %}
-                  <td>{{element[0]}}</td>
-                  <td>{{element[1]}}</td>
-                  {% endraw %}
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <img class="col-sm-3 col-sm-offset-4" src="{{ url_for('static', filename='spinner.gif') }}" ng-show="loading">
-        </div>
-      </div>
-      <br>
-      <word-count-chart data="wordcounts"></word-count-chart>
+
+        <!-- Button that submits a POST request to increment click count -->
+        <form id="click-form" method="POST" action="{{ url_for('index') }}">
+            <button type="submit">Click Me!</button>
+        </form>
     </div>
-    <br><br>
-    <!-- scripts -->
-    <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="//code.jquery.com/jquery-2.2.1.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
-    <script src="{{ url_for('static', filename='main.js') }}"></script>
-  </body>
+</body>
 </html>
