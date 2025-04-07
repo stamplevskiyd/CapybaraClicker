@@ -9,7 +9,7 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            /* Replace 'images/capybara_wallpaper.png' with your actual wallpaper path */
+            /* Replace 'images/capybara_wallpaper.jpg' with your actual wallpaper path */
             background: url("{{ url_for('static', filename='images/capybara_wallpaper.jpg') }}")
                 no-repeat center center fixed;
             background-size: cover;
@@ -52,30 +52,29 @@
             margin-top: 100px;
         }
 
-        /* Framed container around the image (now solid white) */
+        /* Framed container around the image (solid white) */
         #capy-img-frame {
-            background-color: #ffffff; /* Changed from rgba(255,255,255,0.5) */
+            background-color: #ffffff;
             padding: 10px;
             border: 4px dotted #ffb7c5;  /* pastel pink dotted border */
             border-radius: 12px;
-            /* Increase or modify shadow here if you want a more pronounced effect */
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             margin-bottom: 20px;
         }
 
-        /* OPTIONAL: Add a shadow directly on the capybara image as well */
+        /* Capybara image itself with an optional shadow */
         #capy-img {
             max-width: 300px;
             height: auto;
             border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Add or remove as desired */
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
 
-        /* Click counter styling with a fully opaque background */
+        /* Click counter styling with fully opaque background */
         #click-counter {
             margin-top: 10px;
             font-size: 2em;
-            background-color: #ffffff; /* Changed from rgba(255,255,255,0.8) */
+            background-color: #ffffff;
             padding: 10px 20px;
             border-radius: 6px;
             text-align: center;
@@ -85,17 +84,14 @@
         #click-info {
             margin-top: 5px;
             font-size: 1.1em;
-            background-color: #ffffff; /* Changed from rgba(255,255,255,0.7) */
+            background-color: #ffffff;
             padding: 6px 12px;
             border-radius: 4px;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
         }
 
-        /* Form button styling for the clicker */
-        #click-form {
-            margin-top: 20px;
-        }
-        #click-form button {
+        /* Form button styling for the clicker and reset forms */
+        .form-button {
             font-size: 1em;
             padding: 10px 20px;
             cursor: pointer;
@@ -103,9 +99,17 @@
             border-radius: 4px;
             background-color: #0275d8; /* a nice blue tone */
             color: #fff;
+            margin-right: 8px; /* small gap if buttons are side by side */
         }
-        #click-form button:hover {
+        .form-button:hover {
             background-color: #025aa5;
+        }
+
+        /* Wrapper for the two buttons */
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px; /* space between the two forms */
         }
     </style>
 </head>
@@ -134,10 +138,19 @@
             {{ description }}
         </div>
 
-        <!-- Button that submits a POST request to increment click count -->
-        <form id="click-form" method="POST" action="{{ url_for('capybaras.index') }}">
-            <button type="submit">Click Me!</button>
-        </form>
+        <!-- Button group holding the "Click" and "Reset" forms side by side -->
+        <div class="button-group">
+            <!-- Button that submits a POST request to increment click count -->
+            <form id="click-form" method="POST" action="{{ url_for('capybaras.index') }}">
+                <button class="form-button" type="submit">Click Me!</button>
+            </form>
+
+            <!-- Reset button: uses a separate form that, on submit, confirms user action -->
+            <form id="reset-form" method="POST" action="{{ url_for('capybaras.reset') }}"
+                  onsubmit="return confirm('Are you sure you want to reset the data?');">
+                <button class="form-button" type="submit">Reset</button>
+            </form>
+        </div>
     </div>
 
 </body>
