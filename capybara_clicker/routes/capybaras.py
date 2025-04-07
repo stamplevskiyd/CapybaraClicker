@@ -28,5 +28,5 @@ def index():
 
     # In any scenario return click count
     return render_template(
-        "index.html", username=username, clicks=counter.count, image_path="capy_1.jpg"
+        "index.html", username=username, clicks=counter.count, image_path="clicker_capys/capy_1.jpg", description="TODO"
     )
