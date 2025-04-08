@@ -14,12 +14,13 @@ spec:
     spec:
       containers:
       - name: capybara-clicker
-        image: capybara-clicker
+        image: capybara-clicker:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 8090
         env:
         - name: MYSQL_HOST
-          value: "mysql_db"
+          value: "mysql-service"  # <-- Меняем на имя сервиса
         - name: MYSQL_USER
           value: "capybara"
         - name: MYSQL_PASSWORD
@@ -28,6 +29,8 @@ spec:
           value: "capybara_clicker"
         - name: MYSQL_PORT
           value: "3306"
+        - name: SECRET_KEY
+          value: "override-me-secret-key"
 ---
 apiVersion: v1
 kind: Service
@@ -36,8 +39,9 @@ metadata:
 spec:
   type: NodePort
   selector:
-    app: flask-app
+    app: capybara-clicker  # <-- Указываем тот же лейбл, что и в Deployment
   ports:
-  - port: 80  # default http port
-    targetPort: 8090  # container flask port
-    protocol: TCP
+    - port: 80
+      targetPort: 8090
+      protocol: TCP
+      # nodePort: 30080  # Можно явно указать nodePort, если нужно конкретное число

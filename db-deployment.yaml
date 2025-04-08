@@ -38,21 +38,21 @@ spec:
         ports:
         - containerPort: 3306
         volumeMounts:
-          - mountPath: mysql-storage
-            name: /var/lib/mysql
-      volumes:
         - name: mysql-storage
-          persistentVolumeClaim:
-            claimName: mysql-pv-claim
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-service
+  name: mysql-service  # <-- МЫ ПОДРАЗУМЕВАЕМ ЭТО НАЗВАНИЕ, чтобы работал MYSQL_HOST
 spec:
   selector:
     app: mysql
   ports:
-  - port: 3306
-    targetPort: 3306
-    protocol: TCP
+    - port: 3306
+      targetPort: 3306
+      protocol: TCP
