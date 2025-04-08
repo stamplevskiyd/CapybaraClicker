@@ -20,6 +20,8 @@ services:
     restart: unless-stopped
     ports:
       - "8090:8090"
+    volumes:
+      - ./capybara_clicker:/app/capybara_clicker
 
 volumes:
   mysql-home:

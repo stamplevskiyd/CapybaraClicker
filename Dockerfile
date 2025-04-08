@@ -29,7 +29,7 @@ COPY --from=poetry-base ${POETRY_VENV} ${POETRY_VENV}
 ENV PATH="${PATH}:${POETRY_VENV}/bin"
 
 # Flask environment variables
-ENV FLASK_APP=capybara_clicker
+ENV FLASK_APP="capybara_clicker.app"
 ENV FLASK_PORT=8090
 
 WORKDIR /app
@@ -51,10 +51,10 @@ RUN poetry install --no-interaction --no-cache --without dev
 COPY . /app
 
 # Copy your run script to /usr/bin and make it executable
-COPY --chmod=755 run_app.sh /usr/bin/run_app.sh
+COPY --chmod=755 run_app.sh ./app
 
 # Expose the chosen port
 EXPOSE ${FLASK_PORT}
 
 # Run the Flask app via the script
-CMD ["/usr/bin/run_app.sh"]
+CMD ["/app/run_app.sh"]
