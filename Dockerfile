@@ -1,54 +1,60 @@
-FROM python:3.13 as python-base
+# ============ Stage: Base Python Image =============
+FROM python:3.13 AS python-base
 
-# https://python-poetry.org/docs#ci-recommendations
 ENV POETRY_VERSION=2.1.2
 ENV POETRY_HOME=/opt/poetry
 ENV POETRY_VENV=/opt/poetry-venv
-
-# Tell Poetry where to place its cache and virtual environment
 ENV POETRY_CACHE_DIR=/opt/.cache
 
-# Create stage for Poetry installation
-FROM python-base as poetry-base
+# ============ Stage: Poetry Installation ============
+FROM python-base AS poetry-base
 
-# Creating a virtual environment just for poetry and install it with pip
+# Create a separate virtual environment only for Poetry
 RUN python3 -m venv $POETRY_VENV \
-	&& $POETRY_VENV/bin/pip install -U pip setuptools \
-	&& $POETRY_VENV/bin/pip install poetry==${POETRY_VERSION}
+    && $POETRY_VENV/bin/pip install --upgrade pip setuptools \
+    && $POETRY_VENV/bin/pip install poetry==$POETRY_VERSION
 
-# Create a new stage from the base python image
-FROM python-base as clicker-app
+# ============ Stage: Final App Image ===============
+FROM python-base AS clicker-app
 
-# Copy Poetry to app image
+# -- 1) Install MySQL client (and clean up apt cache)
+RUN apt-get update \
+    && apt-get install -y default-mysql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy the Poetry virtualenv from the poetry-base stage
 COPY --from=poetry-base ${POETRY_VENV} ${POETRY_VENV}
 
 # Add Poetry to PATH
 ENV PATH="${PATH}:${POETRY_VENV}/bin"
 
-# Add flask path
+# Flask environment variables
 ENV FLASK_APP=capybara_clicker
 ENV FLASK_PORT=8090
 
 WORKDIR /app
 
-# Copy Dependencies
-COPY poetry.lock pyproject.toml ./
+# Copy main dependency files
+COPY pyproject.toml poetry.lock ./
 
-# Copy python project
+# Copy your main python package
 COPY capybara_clicker ./capybara_clicker
 
-# Create fake readme for poetry
+# Create a fake readme for Poetry validation
 RUN touch README.md
 
-# [OPTIONAL] Validate the project is properly configured
+# Validate and install dependencies
 RUN poetry check
-
-# Install Dependencies
 RUN poetry install --no-interaction --no-cache --without dev
 
-# Copy Application
+# Copy the remainder of your source code
 COPY . /app
 
-# Run Flask at port 5000
+# Copy your run script to /usr/bin and make it executable
+COPY --chmod=755 run_app.sh /usr/bin/run_app.sh
+
+# Expose the chosen port
 EXPOSE ${FLASK_PORT}
-CMD [ "poetry", "run", "python", "-m", "flask", "run", "--host=0.0.0.0", "--port=${FLASK_PORT}"]
+
+# Run the Flask app via the script
+CMD ["/usr/bin/run_app.sh"]
