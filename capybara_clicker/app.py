@@ -23,6 +23,7 @@ def create_app() -> Flask:
     # Prepare app and db
     app = Flask(__name__)
     app.config.from_object("capybara_clicker.config")
+    app.config["SESSION_TYPE"] = "memcached"
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)

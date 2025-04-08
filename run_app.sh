@@ -2,7 +2,7 @@
 
 # Upgrade db
 echo "Applying db migrations"
-poetry run python -m flask db upgrade
+poetry run python -m flask db upgrade --directory capybara_clicker/migrations/
 echo "Migrations applied!"
 
 # Run flask
