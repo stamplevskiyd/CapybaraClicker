@@ -20,7 +20,7 @@ spec:
         - containerPort: 8090
         env:
         - name: MYSQL_HOST
-          value: "mysql-service"  # <-- Меняем на имя сервиса
+          value: "mysql-service"  # Name of mysql k8s service
         - name: MYSQL_USER
           value: "capybara"
         - name: MYSQL_PASSWORD
@@ -35,13 +35,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: flask-service
+  name: clicker-service
 spec:
   type: NodePort
   selector:
-    app: capybara-clicker  # <-- Указываем тот же лейбл, что и в Deployment
+    app: capybara-clicker
   ports:
     - port: 80
       targetPort: 8090
       protocol: TCP
-      # nodePort: 30080  # Можно явно указать nodePort, если нужно конкретное число
