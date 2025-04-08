@@ -1,4 +1,5 @@
 from flask_login import UserMixin
+from sqlalchemy import String
 from sqlalchemy.orm import Mapped, relationship
 from sqlalchemy.testing.schema import mapped_column
 
@@ -11,8 +12,8 @@ class User(db.Model, UserMixin):
 
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str]
-    password: Mapped[str]
+    username: Mapped[str] = mapped_column(String(64))
+    password: Mapped[str] = mapped_column(String(256))
     clicker: Mapped[ClickCounter] = relationship(back_populates="user")
 
     def get_id(self) -> str:
