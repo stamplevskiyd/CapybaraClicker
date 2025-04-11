@@ -8,19 +8,20 @@
 чтобы не застрять на сложной логике приложения там, где это не требуется.
 
 ### Запуск
-Пару лишних моментов расписал для себя, так как раньше работал с Docker, но не с Kubernetes
-0. Собрать docker image для приложения и "показать" его minikube:
+1. Собрать docker image для приложения и "показать" его minikube:
 ```shell
 eval $(minikube docker-env)
 docker build . -t capybara-clicker:latest
 minikube image load capybara-clicker:latest
 ```
-1. Запустить minikube (minikube start)
-2. Запуск подов:
+2. Запустить minikube (minikube start)
+3. Запуск подов:
 ```shell
 kubectl apply -f db-deployment.yaml
 kubectl apply -f clicker-deployment.yaml
 ```
+
+Остальные инструкции не обязательны, оставил их для себя.
 3. Если нужно проверить, что они запущены:
 ```shell
 kubectl get pods

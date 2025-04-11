@@ -15,7 +15,7 @@ spec:
       containers:
       - name: capybara-clicker
         image: capybara-clicker:latest
-        imagePullPolicy: Never
+        imagePullPolicy: Never  # Using local image only
         ports:
         - containerPort: 8090
         env:
