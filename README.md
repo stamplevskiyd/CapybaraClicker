@@ -10,7 +10,6 @@
 ### Запуск
 1. Собрать docker image для приложения и "показать" его minikube:
 ```shell
-eval $(minikube docker-env)
 docker build . -t capybara-clicker:latest
 minikube image load capybara-clicker:latest
 ```
@@ -31,7 +30,11 @@ kubectl get pods
 minikube service clicker-service
 ```
 
-Зайти в pod:
+Полезные команды:
 ```shell
 kubectl exec -it <pod name, get in kubectl get pods> -- /bin/bash
+```
+
+```shell
+eval $(minikube docker-env)
 ```
